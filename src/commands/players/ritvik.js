@@ -1,28 +1,76 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
+const { google } = require('googleapis');
+const sheets = google.sheets('v4');
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('ritvik')
         .setDescription('Player Statistics for Ritvik Shah'),
     async execute(interaction, client) {
+
+        // Send public message to the channel, so that people can see you used a command without seeing it
+        await interaction.reply({
+            content: `${interaction.user.username} just checked out Ritvik Shah's stats! 📊`,
+            ephemeral: false
+        });
+
+        const auth = new google.auth.GoogleAuth({
+                    keyFile: 'credentials.json',
+                    scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly']
+                });
+        
+                const authClient = await auth.getClient();
+        
+                const response = await sheets.spreadsheets.values.get({
+                    auth: authClient,
+                    spreadsheetId: '1xREw4GOWNdrfecTE13t4uWIstXvR5WdhGiwK1PjLWXE',
+                    range: 'DBFL Records (2025 Edition)!C5:T5'
+                });
+        
+                const values = response.data.values.flat();
+        
+                const [
+                    pass_tds,
+                    rec_tds,
+                    off_yds,
+                    ints_qb,
+                    ints_def,
+                    rating,
+                    filler1,
+                    touchdowns,
+                    yards,
+                    off_ints,
+                    def_ints,
+                    filler2,
+                    qb_rank,
+                    wr_rank,
+                    def_rank,
+                    filler3,
+                    wins,
+                    losses
+                ] = values;
+
         const embed = new EmbedBuilder()
         .setTitle(`Ritvik Shah`)
-        .setColor(0x7ed957)
-        .setThumbnail('https://cdn.discordapp.com/attachments/1220085546190110900/1220095524103782420/Ratings_A.png?ex=660db181&is=65fb3c81&hm=3da515fddf26af709250f68ae192a4dac82e1c50d6a44cffaa49c3870763ccf0&')
-        .setImage('https://cdn.discordapp.com/attachments/1220085546190110900/1220171767251996672/Ritvik_DBFL.png?ex=660df883&is=65fb8383&hm=d143fcae71713c9a7a405445370672cc9c05148c98012c5397ddc98bfcc90a67&')
+        .setColor(0xac2928)
+        .setThumbnail('https://cdn.discordapp.com/attachments/1220085546190110900/1361520473925619954/DBFL_BB_A_Rating.png?ex=68010880&is=67ffb700&hm=354a09092bde8815ead3ec855a76952ca0c9b122736e29dfdd7cfe1b70a6fa0b&')
+        .setImage('https://cdn.discordapp.com/attachments/1220085546190110900/1362137355934236822/Ritvik_DBFL_2025.gif?ex=6809de84&is=68088d04&hm=fae9745b915372fc323a535089020cf0f705f1ea5f370724d123355c1d781a84&')
         .setFooter({
             text: 'Make sure to check out other player statistics!!!'
         })
         .addFields([
-            {name: 'Team', value: 'Green Bay Goblins'},
-            {name: 'Position', value: 'QB/WR'},
-            {name: 'Touchdowns', value: '41(22) TDS (*3rd*)'},
-            {name: 'INTS (OFF)', value: '7(3) INTS (*4th*)'},
-            {name: 'INTS (DEF)', value: '4(2) INTS (*6th*)'},
-            {name: 'Rating', value: '**92** OVR'}
+            {name: 'Record', value: `*${wins}-${losses}*`},
+            {name: 'Position', value: 'WR'},
+            {name: 'Touchdowns', value: `${parseInt(pass_tds) + parseInt(rec_tds)} (${touchdowns}) TDS | Rank: ***${qb_rank}***`},
+            {name: 'YARDS (OFF)', value: `${off_yds} (${yards}) YDS`},
+            {name: 'INTS (OFF)', value: `${ints_qb} (${off_ints}) INTS`},
+            {name: 'INTS (DEF)', value: `${ints_def} (${def_ints}) INTS | Rank: ***${def_rank}***`},
+            {name: 'Rating', value: `**${rating}** OVR`}
         ]);
 
-        await interaction.reply({
-            embeds: [embed]
+        await interaction.followUp({
+            embeds: [embed],
+            ephemeral: true
         });
     },
 };

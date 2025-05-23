@@ -1,21 +1,56 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
+const getTopTDPlayers = require('../../utils/getTopTDPlayers');
+const getTopINTPlayers = require('../../utils/getTopINTPlayers');
+const getTopYDPlayers = require('../../utils/getTopYDPlayers');
+
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('leaders')
+        .setName('leaderboard')
         .setDescription('This is a command for the current stat leaders in the league'),
     async execute(interaction, client) {
-        const embed = new EmbedBuilder()
-        .setTitle(`DBFL Stats Leaders`)
-        .setDescription('Updated (Week 5)')
-        .setColor(0xffffff)
-        .addFields([
-            {name: 'Touchdowns', value: '1. Mikey **(49)**\n2. Bear **(30)**\n3. (Ritvik / Allen) **(22)**'},
-            {name: 'Picks (DEF)', value: '1. Bear **(12)**\n2. Alex **(7)**\n3. (John / Mikey / Ben) **(4)**'},
-            {name: 'Interceptions (QB)', value: '1. John **(7)**\n2. Allen **(6)**\n3. Ben **(4)**'},
-        ]);
 
+        // Send public message to the channel, so that people can see you used a command without seeing it
         await interaction.reply({
-            embeds: [embed]
+            content: `${interaction.user.username} just checked out DBFL's Leaderboard! 📊`,
+            ephemeral: false
+        });
+
+        const topTDPlayers = await getTopTDPlayers('1xREw4GOWNdrfecTE13t4uWIstXvR5WdhGiwK1PjLWXE')
+        const topINTPlayers = await getTopINTPlayers('1xREw4GOWNdrfecTE13t4uWIstXvR5WdhGiwK1PjLWXE')
+        const topYDPlayers = await getTopYDPlayers('1xREw4GOWNdrfecTE13t4uWIstXvR5WdhGiwK1PjLWXE')
+        
+        const embed = new EmbedBuilder()
+        .setTitle(`🏆 DBFL Stat Leaders 🏆`)
+        .setColor(0xac2928)
+        .addFields([
+            { name: '🔥 Touchdown Leaders', value: '\u200B' },
+            ...topTDPlayers.map((p, i) => ({
+                name: `${i + 1}. ${p.name}`,
+                value: `**${p.tds}** Touchdowns`,
+                inline: false
+            })),
+    
+            { name: '🛡️ Interception Leaders', value: '\u200B' },
+            ...topINTPlayers.map((p, i) => ({
+                name: `${i + 1}. ${p.name}`,
+                value: `**${p.ints}** Interceptions`,
+                inline: false
+            })),
+    
+            { name: '🚀 Yardage Leaders', value: '\u200B' },
+            ...topYDPlayers.map((p, i) => ({
+                name: `${i + 1}. ${p.name}`,
+                value: `**${p.yds}** Yards`,
+                inline: false
+            }))
+        ])
+        .setFooter({ text: 'Check back next week for updated stats!' })
+        .setTimestamp();
+
+        // Making the embed only visible to the user to promote more usage
+        await interaction.followUp({
+            embeds: [embed],
+            ephemeral: true
         });
     },
 };

@@ -1,27 +1,76 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
+const { google } = require('googleapis');
+const sheets = google.sheets('v4');
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('patrick')
         .setDescription('Player Statistics for Patrick Hynds'),
     async execute(interaction, client) {
+
+        // Send public message to the channel, so that people can see you used a command without seeing it
+        await interaction.reply({
+            content: `${interaction.user.username} just checked out Patrick Hynds' stats! 📊`,
+            ephemeral: false
+        });
+
+        const auth = new google.auth.GoogleAuth({
+                    keyFile: 'credentials.json',
+                    scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly']
+                });
+        
+                const authClient = await auth.getClient();
+        
+                const response = await sheets.spreadsheets.values.get({
+                    auth: authClient,
+                    spreadsheetId: '1xREw4GOWNdrfecTE13t4uWIstXvR5WdhGiwK1PjLWXE',
+                    range: 'DBFL Records (2025 Edition)!C12:T12'
+                });
+        
+                const values = response.data.values.flat();
+        
+                const [
+                    pass_tds,
+                    rec_tds,
+                    off_yds,
+                    ints_qb,
+                    ints_def,
+                    rating,
+                    filler1,
+                    touchdowns,
+                    yards,
+                    off_ints,
+                    def_ints,
+                    filler2,
+                    qb_rank,
+                    wr_rank,
+                    def_rank,
+                    filler3,
+                    wins,
+                    losses
+                ] = values;
+
         const embed = new EmbedBuilder()
         .setTitle(`Patrick Hynds`)
-        .setColor(0xada16f)
-        .setThumbnail('https://cdn.discordapp.com/attachments/1220085546190110900/1220095524473016390/Ratings_B.png?ex=660db181&is=65fb3c81&hm=ec641d3a360a5a050a597ab0da1bcb72b3e321f380caf26e0deff8410a9bbfe2&')
-        .setImage('https://cdn.discordapp.com/attachments/753687727312076841/1253460653805539459/Patrick_DBFL.png?ex=6675efb4&is=66749e34&hm=5647c32e78bb16684ceed827749a3cf4054eeff0307bc1a84974ae0eab87ffb8&')
+        .setColor(0xac2928)
+        .setThumbnail('https://cdn.discordapp.com/attachments/1220085546190110900/1362058866057281558/DBFL_BB_B_Rating.png?ex=680a3e2b&is=6808ecab&hm=abe7723f5095c04341704bb571cecb000b8f1ae2d561dea04c1cadc68242a711&')
+        .setImage('https://cdn.discordapp.com/attachments/1220085546190110900/1364765644813504673/Patrick_DBFL_2025.gif?ex=680adc8d&is=68098b0d&hm=11930393bf9bd6cdd9b9851552eac3aecc217cfe2b2b7dd195e54dee5177c258&')
         .setFooter({
             text: 'Make sure to check out other player statistics!!!'
         })
         .addFields([
-            {name: 'Position', value: 'WR'},
-            {name: 'Touchdowns', value: '19(1) TDS (*14th*)'},
-            {name: 'INTS (OFF)', value: '2(0) INTS (*20+*)'},
-            {name: 'INTS (DEF)', value: '8(1) INTS (*9th*)'},
-            {name: 'Rating', value: '**85** OVR'}
+            {name: 'Record', value: `*${wins}-${losses}*`},
+            {name: 'Position', value: 'QB/WR'},
+            {name: 'Touchdowns', value: `${parseInt(pass_tds) + parseInt(rec_tds)} (${touchdowns}) TDS | Rank: ***${qb_rank}***`},
+            {name: 'YARDS (OFF)', value: `${off_yds} (${yards}) YDS`},
+            {name: 'INTS (OFF)', value: `${ints_qb} (${off_ints}) INTS`},
+            {name: 'INTS (DEF)', value: `${ints_def} (${def_ints}) INTS | Rank: ***${def_rank}***`},
+            {name: 'Rating', value: `**${rating}** OVR`}
         ]);
 
-        await interaction.reply({
-            embeds: [embed]
+        await interaction.followUp({
+            embeds: [embed],
+            ephemeral: true
         });
     },
 };

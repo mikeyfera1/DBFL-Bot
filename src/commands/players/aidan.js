@@ -1,0 +1,77 @@
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
+const { google } = require('googleapis');
+const sheets = google.sheets('v4');
+
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('aidan')
+        .setDescription('Player Statistics for Aidan O\'Donnell'),
+    async execute(interaction, client) {
+        
+        // Send public message to the channel, so that people can see you used a command without seeing it
+        await interaction.reply({
+            content: `${interaction.user.username} just checked out Aidan O\'Donnell's stats! 📊`,
+            ephemeral: false
+        });
+
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly']
+        });
+
+        const authClient = await auth.getClient();
+
+        const response = await sheets.spreadsheets.values.get({
+            auth: authClient,
+            spreadsheetId: '1xREw4GOWNdrfecTE13t4uWIstXvR5WdhGiwK1PjLWXE',
+            range: 'DBFL Records (2025 Edition)!C16:T16'
+        });
+
+        const values = response.data.values.flat();
+
+        const [
+            pass_tds,
+            rec_tds,
+            off_yds,
+            ints_qb,
+            ints_def,
+            rating,
+            filler1,
+            touchdowns,
+            yards,
+            off_ints,
+            def_ints,
+            filler2,
+            qb_rank,
+            wr_rank,
+            def_rank,
+            filler3,
+            wins,
+            losses
+        ] = values;
+
+        const embed = new EmbedBuilder()
+        .setTitle(`Aidan O'Donnell`)
+        .setColor(0xac2928)
+        .setThumbnail('https://cdn.discordapp.com/attachments/1220085546190110900/1367884340327092375/DBFL_BB_NA_Rating.png?ex=68163510&is=6814e390&hm=1aa9a67872f195ec510c9fbcf926ec28882fa7c603bcb9bf5e21f6e083bf34d0&')
+        .setImage('https://media.discordapp.net/attachments/1220085546190110900/1362137262548062663/Aidan_DBFL_2025.gif?ex=6815bbee&is=68146a6e&hm=e1b7b1e8f1927285f45fca3283769fa934ebde97af8b6ca4c09609ecba137be3&=&width=1392&height=1392')
+        .setFooter({
+            text: 'Make sure to check out other player statistics!!!'
+        })
+        .addFields([
+            {name: 'Record', value: `*${wins}-${losses}*`},
+            {name: 'Position', value: 'QB'},
+            {name: 'Touchdowns', value: `${parseInt(pass_tds) + parseInt(rec_tds)} (${touchdowns}) TDS | Rank: ***${qb_rank}***`},
+            {name: 'YARDS (OFF)', value: `${off_yds} (${yards}) YDS`},
+            {name: 'INTS (OFF)', value: `${ints_qb} (${off_ints}) INTS`},
+            {name: 'INTS (DEF)', value: `${ints_def} (${def_ints}) INTS | Rank: ***${def_rank}***`},
+            {name: 'Rating', value: `**${rating}** OVR`}
+        ]);
+
+        // Making the embed only visible to the user to promote more usage
+        await interaction.followUp({
+            embeds: [embed],
+            ephemeral: true
+        });
+    },
+};

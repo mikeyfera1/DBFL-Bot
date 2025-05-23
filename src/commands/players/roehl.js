@@ -4,6 +4,12 @@ module.exports = {
         .setName('roehl')
         .setDescription('Player Statistics for Roehl Bennedicto'),
     async execute(interaction, client) {
+
+        await interaction.reply({
+            content: `${interaction.user.username} just checked out Roehl Bennedicto' LEGACY! 📊`,
+            ephemeral: false
+        });
+
         const embed = new EmbedBuilder()
         .setTitle(`Roehl Bennedicto`)
         .setColor(0xd4af37)
@@ -21,8 +27,9 @@ module.exports = {
             {name: 'Career Rating', value: '**85** OVR'}
         ]);
 
-        await interaction.reply({
-            embeds: [embed]
+        await interaction.followUp({
+            embeds: [embed],
+            ephemeral: true
         });
     },
 };

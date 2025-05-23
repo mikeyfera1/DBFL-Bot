@@ -2,25 +2,34 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('schedule')
-        .setDescription('Returns the current predictions for the DBFL'),
+        .setDescription('Current DBFL Schedule'),
     async execute(interaction, client) {
+
+        // Send public message to the channel, so that people can see you used a command without seeing it
+        await interaction.reply({
+            content: `${interaction.user.username} just checked out DBFL's Schedule! 📊`,
+            ephemeral: false
+        });
+
         const embed = new EmbedBuilder()
         .setTitle(`Current DBFL Schedule`)
-        .setColor(0xff914d)
-        .setImage('https://cdn.discordapp.com/attachments/753687727312076841/1220820552575619143/DBFL_ALERT_6.png?ex=661054bd&is=65fddfbd&hm=f6cb1ee5a6bd03b9d30d34c51a91458ee6b6ccaa02b96b62211a9d1af302f228&')
+        .setColor(0xac2928)
+        // .setImage('https://cdn.discordapp.com/attachments/753687727312076841/1220820552575619143/DBFL_ALERT_6.png?ex=661054bd&is=65fddfbd&hm=f6cb1ee5a6bd03b9d30d34c51a91458ee6b6ccaa02b96b62211a9d1af302f228&')
         .addFields([
-            {name: 'Week 1 (OVER) ', value: '**Wizards 49** VS Knights 28\n**Dragons 42** VS Goblins 7'},
-            {name: 'Week 2 (OVER)', value: 'Dragons 28 VS Wizards **63**\nGoblins **TIED** Knights'},
-            {name: 'Week 3 (OVER)', value: 'Wizards **56** VS Goblins 35\nKnights 28 VS Dragons **35**'},
-            {name: 'Week 4 (OVER)', value: 'Knights 35 VS Wizards **42**\nGoblins 28 VS Dragons **42**'},
-            {name: 'Week 5 (OVER)', value: 'Wizards **70** VS Dragons 21\nKnights **49** VS Goblins 28'},
-            {name: 'Week 6 (OVER)', value: 'Dragons **49** VS Knights 28\nGoblins 28 VS Wizards **56**'},
-            {name: 'SUMME BOWL II', value: 'July 6th (TBD)'},
-    
+            {name: 'Week 1', value: 'Saturday (**May 24th**) 10:30am - 12:00pm @ Boyce Field (*TESTING WEEK*)'},
+            {name: 'Week 2', value: 'Saturday (**May 31st**) 10:30am - 12:00pm @ Boyce Field '},
+            {name: 'Week 3', value: 'Saturday (**June 7th**) 10:30am - 12:00pm @ Boyce Field'},
+            {name: 'Week 4', value: 'Saturday (**June 14th**) 10:30am - 12:00pm @ Boyce Field'},
+            {name: 'Week 5', value: 'Saturday (**June 21st**) 10:30am - 12:00pm @ Boyce Field'},
+            {name: 'Week 6', value: 'Saturday (**June 28th**) 10:30am - 12:00pm @ Boyce Field'},
+            {name: 'Week 7', value: 'Saturday (**July 5th**) 10:30am - 12:00pm @ Boyce Field'},
+            {name: 'Week 8', value: 'Saturday (**July 12th**) 10:30am - 12:00pm @ Boyce Field (***PLAYOFFS***)'},
+
         ]);
 
-        await interaction.reply({
-            embeds: [embed]
+        await interaction.followUp({
+            embeds: [embed],
+            ephemeral: true
         });
     },
 };

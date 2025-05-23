@@ -3,7 +3,7 @@ require('dotenv').config();
 
 // All packages require for bot to run
 const { token, databaseToken } = process.env;
-const { connect } = require('mongoose');
+// const { connect } = require('mongoose');
 // const prompt = require('prompt-sync')();
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const fs = require('fs');
@@ -35,5 +35,5 @@ client.handleEvents();
 client.handleCommands();
 client.handleComponents();
 (async () => {
-   await client.login(token);connect(databaseToken).catch(console.error)
+   await client.login(token);
 })();

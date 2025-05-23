@@ -4,20 +4,27 @@ module.exports = {
         .setName('roster')
         .setDescription('Returns the current roster of the DBFL'),
     async execute(interaction, client) {
+
+        // Send public message to the channel, so that people can see you used a command without seeing it
+        await interaction.reply({
+            content: `${interaction.user.username} just checked out DBFL's Roster! 📊`,
+            ephemeral: false
+        });
+
         const embed = new EmbedBuilder()
-        .setTitle(`Current DBFL Roster`)
-        .setColor(0xffffff)
-        .setImage('https://cdn.discordapp.com/attachments/752530922905010261/1217954652801339513/DBFL_LLC_Logo.png?ex=6605e7a9&is=65f372a9&hm=f89e092fd7f54be4316996120399fedae532105d56d1b7a0299146712b79cb18&')
+        .setTitle(`📊 Current DBFL Roster 📊`)
+        .setColor(0xac2928)
+        .setImage('https://cdn.discordapp.com/attachments/1220085546190110900/1375479598782873651/DBFL_Backyard_Brawl_2.png?ex=6831d6b3&is=68308533&hm=77eeb98aae1be0685316d52640fa8c7ea29b7483b97b0115858b9c82f3c01a99&')
         .setFooter({
-            text: 'Check back to see if someone got injured'
+            text: 'Check back to see if the roster has updated!!'
         })
         .addFields([
-            {name: 'Active Players (21)', value: 'Mikey Fera, Alex Belli, Louie Liberatore, John Hertzog, Franco Liberatore, Ritvik Shah, Saif Bin Hammad, Yousef Bin Hammad, Michael Barsotti, Liam Holleran, Ben Bordenstein, Adam Spotts, Colin Liang, Burhaan Waheed, Hasan Baddaruddin, Gabe Pacella, Scott Cheung, Allen Ho, Cole Jooste, Arun Vasudevan, Bear Bottonari, Aiden Shaffer'},
-            {name: 'Inactive Players (1)', value: 'Patrick Hynds'},
+            {name: '✅ Active Players ✅', value: '1. Mikey Fera\n2. Bear Bottonari\n3. Alex Belli\n4. Ben Bordenstein\n5. Aidan O\'Donnell\n6. Louie LIberatore\n7. Patrick Hynds\n8. Josh Brositz\n9. Elijah Blackwell\n10. Aiden Shaffer\n11. Michael Barsotti\n12. Allen Ho'}
         ]);
 
-        await interaction.reply({
-            embeds: [embed]
+        await interaction.followUp({
+            embeds: [embed],
+            ephemeral: true
         });
     },
 };

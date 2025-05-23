@@ -1,24 +1,35 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
+const { SlashCommandBuilder } = require('discord.js')
+const cron = require('node-cron');
+let isScheduled = false;
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('week')
-        .setDescription('This is a command to bring up the specific week of the DBFL season'),
+        .setDescription('Current Week for DBFL'),
+
     async execute(interaction, client) {
-        const embed = new EmbedBuilder()
-        .setTitle(`Current DBFL WEEK`)
-        .setDescription('Week 1')
-        .setColor(0xffffff)
-        .setImage('https://cdn.discordapp.com/attachments/1220085546190110900/1220100545336049674/Summer_Bowl_2.png?ex=660db62e&is=65fb412e&hm=6e9a5d04b277e56c4ccf0b50fdda6eaccfdb90d9722c1c7af91cf9bef36f85d5&')
-        .setFooter({
-            text: 'Make sure to be there for the preseason!!'
-        })
-        .addFields([
-            {name: 'NOTHING CURRENT', value: 'Playoffs are being scheduled'},
-            // {name: 'Game 2 (7:30pm EST)', value: 'Green Bay Goblins Vs Denver Knights'},
-        ]);
 
         await interaction.reply({
-            embeds: [embed]
+            content: `Weekly Schedule has been uploaded!!`,
+            ephemeral: true
         });
+
+        const channelId = '944009133332516905';
+
+        if (!isScheduled) {
+            const channel = await client.channels.fetch(channelId);
+
+            if (!channel) {
+                console.error('Channel not found');
+                return;
+            }
+
+            cron.schedule('0 12 * * 4', () => {
+                channel.send('@everyone\n\n**🎮 REMINDER 🎮**\n\nDBFL plays this **Saturday** from __10:00am-12:30pm__\n\nLike this message if you\'re available');
+            });
+
+            isScheduled = true;
+            console.log('Weekly game reminders scheduled!!')
+        }
     },
 };
