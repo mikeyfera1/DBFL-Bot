@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
+const getPlayerAchievements = require('../../utils/achievements');
 const { google } = require('googleapis');
 const sheets = google.sheets('v4');
 
@@ -49,10 +50,13 @@ module.exports = {
             losses
         ] = values;
 
+        getPlayerAchievements(client,'1xREw4GOWNdrfecTE13t4uWIstXvR5WdhGiwK1PjLWXE', 'EJ', 18, touchdowns, yards, def_ints, filler1, filler2, filler3);
+
+
         const embed = new EmbedBuilder()
         .setTitle(`Elijah Blackwell`)
         .setColor(0xac2928)
-        .setThumbnail('https://cdn.discordapp.com/attachments/1220085546190110900/1367884340327092375/DBFL_BB_NA_Rating.png?ex=68163510&is=6814e390&hm=1aa9a67872f195ec510c9fbcf926ec28882fa7c603bcb9bf5e21f6e083bf34d0&')
+        .setThumbnail('https://cdn.discordapp.com/attachments/1220085546190110900/1361520473925619954/DBFL_BB_A_Rating.png?ex=68010880&is=67ffb700&hm=354a09092bde8815ead3ec855a76952ca0c9b122736e29dfdd7cfe1b70a6fa0b&')
         .setImage('https://media.discordapp.net/attachments/1220085546190110900/1362137266146770964/Elijah_DBFL_2025.gif?ex=6815bbef&is=68146a6f&hm=7f6ad2b6baa70efd996335f0ae3b6b1e6a22d467347f9e235b8e67dbaaf979c6&=&width=1392&height=1392')
         .setFooter({
             text: 'Make sure to check out other player statistics!!!'
@@ -60,7 +64,7 @@ module.exports = {
         .addFields([
             {name: 'Record', value: `*${wins}-${losses}*`},
             {name: 'Position', value: 'N/A'},
-            {name: 'Touchdowns', value: `${parseInt(pass_tds) + parseInt(rec_tds)} (${touchdowns}) TDS | Rank: ***${qb_rank}***`},
+            {name: 'Touchdowns', value: `${parseInt(pass_tds) + parseInt(rec_tds)} (${touchdowns}) TDS | QB Rank: ***${qb_rank}*** | WR Rank: ***${wr_rank}***`},
             {name: 'YARDS (OFF)', value: `${off_yds} (${yards}) YDS`},
             {name: 'INTS (OFF)', value: `${ints_qb} (${off_ints}) INTS`},
             {name: 'INTS (DEF)', value: `${ints_def} (${def_ints}) INTS | Rank: ***${def_rank}***`},

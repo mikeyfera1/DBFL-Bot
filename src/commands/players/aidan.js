@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
+const getPlayerAchievements = require('../../utils/achievements');
 const { google } = require('googleapis');
 const sheets = google.sheets('v4');
 
@@ -50,10 +51,13 @@ module.exports = {
             losses
         ] = values;
 
+        getPlayerAchievements(client,'1xREw4GOWNdrfecTE13t4uWIstXvR5WdhGiwK1PjLWXE', 'Aidan', 16, touchdowns, yards, def_ints, filler1, filler2, filler3);
+
+
         const embed = new EmbedBuilder()
         .setTitle(`Aidan O'Donnell`)
         .setColor(0xac2928)
-        .setThumbnail('https://cdn.discordapp.com/attachments/1220085546190110900/1367884340327092375/DBFL_BB_NA_Rating.png?ex=68163510&is=6814e390&hm=1aa9a67872f195ec510c9fbcf926ec28882fa7c603bcb9bf5e21f6e083bf34d0&')
+        .setThumbnail('https://cdn.discordapp.com/attachments/1220085546190110900/1362058866057281558/DBFL_BB_B_Rating.png?ex=680a3e2b&is=6808ecab&hm=abe7723f5095c04341704bb571cecb000b8f1ae2d561dea04c1cadc68242a711&')
         .setImage('https://media.discordapp.net/attachments/1220085546190110900/1362137262548062663/Aidan_DBFL_2025.gif?ex=6815bbee&is=68146a6e&hm=e1b7b1e8f1927285f45fca3283769fa934ebde97af8b6ca4c09609ecba137be3&=&width=1392&height=1392')
         .setFooter({
             text: 'Make sure to check out other player statistics!!!'
@@ -61,7 +65,7 @@ module.exports = {
         .addFields([
             {name: 'Record', value: `*${wins}-${losses}*`},
             {name: 'Position', value: 'QB'},
-            {name: 'Touchdowns', value: `${parseInt(pass_tds) + parseInt(rec_tds)} (${touchdowns}) TDS | Rank: ***${qb_rank}***`},
+            {name: 'Touchdowns', value: `${parseInt(pass_tds) + parseInt(rec_tds)} (${touchdowns}) TDS | QB Rank: ***${qb_rank}*** | WR Rank: ***${wr_rank}***`},
             {name: 'YARDS (OFF)', value: `${off_yds} (${yards}) YDS`},
             {name: 'INTS (OFF)', value: `${ints_qb} (${off_ints}) INTS`},
             {name: 'INTS (DEF)', value: `${ints_def} (${def_ints}) INTS | Rank: ***${def_rank}***`},

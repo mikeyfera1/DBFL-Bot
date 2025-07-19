@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
+const getPlayerAchievements = require('../../utils/achievements');
 const { google } = require('googleapis');
 const sheets = google.sheets('v4');
 
@@ -18,36 +19,39 @@ module.exports = {
                     scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly']
                 });
         
-                const authClient = await auth.getClient();
-        
-                const response = await sheets.spreadsheets.values.get({
-                    auth: authClient,
-                    spreadsheetId: '1xREw4GOWNdrfecTE13t4uWIstXvR5WdhGiwK1PjLWXE',
-                    range: 'DBFL Records (2025 Edition)!C7:T7'
-                });
-        
-                const values = response.data.values.flat();
-        
-                const [
-                    pass_tds,
-                    rec_tds,
-                    off_yds,
-                    ints_qb,
-                    ints_def,
-                    rating,
-                    filler1,
-                    touchdowns,
-                    yards,
-                    off_ints,
-                    def_ints,
-                    filler2,
-                    qb_rank,
-                    wr_rank,
-                    def_rank,
-                    filler3,
-                    wins,
-                    losses
-                ] = values;
+        const authClient = await auth.getClient();
+
+        const response = await sheets.spreadsheets.values.get({
+            auth: authClient,
+            spreadsheetId: '1xREw4GOWNdrfecTE13t4uWIstXvR5WdhGiwK1PjLWXE',
+            range: 'DBFL Records (2025 Edition)!C7:T7'
+        });
+
+        const values = response.data.values.flat();
+
+        const [
+            pass_tds,
+            rec_tds,
+            off_yds,
+            ints_qb,
+            ints_def,
+            rating,
+            filler1,
+            touchdowns,
+            yards,
+            off_ints,
+            def_ints,
+            filler2,
+            qb_rank,
+            wr_rank,
+            def_rank,
+            filler3,
+            wins,
+            losses
+        ] = values;
+
+        getPlayerAchievements(client,'1xREw4GOWNdrfecTE13t4uWIstXvR5WdhGiwK1PjLWXE', 'Aiden', 7, touchdowns, yards, def_ints, filler1, filler2, filler3);
+
         const embed = new EmbedBuilder()
         .setTitle(`Aiden Shaffer`)
         .setColor(0xac2928)
@@ -59,7 +63,7 @@ module.exports = {
         .addFields([
             {name: 'Record', value: `*${wins}-${losses}*`},
             {name: 'Position', value: 'WR/TE'},
-            {name: 'Touchdowns', value: `${parseInt(pass_tds) + parseInt(rec_tds)} (${touchdowns}) TDS | Rank: ***${qb_rank}***`},
+            {name: 'Touchdowns', value: `${parseInt(pass_tds) + parseInt(rec_tds)} (${touchdowns}) TDS | QB Rank: ***${qb_rank}*** | WR Rank: ***${wr_rank}***`},
             {name: 'YARDS (OFF)', value: `${off_yds} (${yards}) YDS`},
             {name: 'INTS (OFF)', value: `${ints_qb} (${off_ints}) INTS`},
             {name: 'INTS (DEF)', value: `${ints_def} (${def_ints}) INTS | Rank: ***${def_rank}***`},

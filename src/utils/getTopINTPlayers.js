@@ -25,7 +25,7 @@ async function getTopPlayersByINTs(sheetId, range = 'DBFL Records (2025 Edition)
     // Example assumes first column is name, second column is TDs
     const players = rows.map((row, index) => {
         const name = row[0] || `Player ${index + 1}`;
-        const ints = parseInt(row[5]) || 0;
+        const ints = parseInt(row[6]) || 0;
         return { name, ints, raw: row };
     });
 

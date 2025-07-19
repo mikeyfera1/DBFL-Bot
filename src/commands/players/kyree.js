@@ -1,16 +1,16 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
-const getPlayerAchievements = require('../../utils/achievements');
 const { google } = require('googleapis');
 const sheets = google.sheets('v4');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('michael')
-        .setDescription('Player Statistics for Michael Barsotti'),
+        .setName('kyree')
+        .setDescription('Player Statistics for Kyree'),
     async execute(interaction, client) {
 
+        // Send public message to the channel, so that people can see you used a command without seeing it
         await interaction.reply({
-            content: `${interaction.user.username} just checked out Michael Barsotti's stats! 📊`,
+            content: `${interaction.user.username} just checked out Kyree's stats! 📊`,
             ephemeral: false
         });
 
@@ -24,7 +24,7 @@ module.exports = {
                 const response = await sheets.spreadsheets.values.get({
                     auth: authClient,
                     spreadsheetId: '1xREw4GOWNdrfecTE13t4uWIstXvR5WdhGiwK1PjLWXE',
-                    range: 'DBFL Records (2025 Edition)!C15:T15'
+                    range: 'DBFL Records (2025 Edition)!C19:T19'
                 });
         
                 const values = response.data.values.flat();
@@ -50,19 +50,17 @@ module.exports = {
                     losses
                 ] = values;
 
-                getPlayerAchievements(client,'1xREw4GOWNdrfecTE13t4uWIstXvR5WdhGiwK1PjLWXE', 'Michael', 15, touchdowns, yards, def_ints, filler1, filler2, filler3);
-
         const embed = new EmbedBuilder()
-        .setTitle(`Michael Barsotti`)
+        .setTitle(`Kyree`)
         .setColor(0xac2928)
-        .setThumbnail('https://cdn.discordapp.com/attachments/1220085546190110900/1362058866057281558/DBFL_BB_B_Rating.png?ex=680a3e2b&is=6808ecab&hm=abe7723f5095c04341704bb571cecb000b8f1ae2d561dea04c1cadc68242a711&')
-        .setImage('https://cdn.discordapp.com/attachments/1220085546190110900/1362242801328193566/Michael_DBFL_2025.gif?ex=6825f039&is=68249eb9&hm=5af0b3617af4f7e1402ff0cabedb250ccc27f6b18159a4ad2bd1c5656be418cd&')
+        .setThumbnail('https://cdn.discordapp.com/attachments/1220085546190110900/1367884340327092375/DBFL_BB_NA_Rating.png?ex=68163510&is=6814e390&hm=1aa9a67872f195ec510c9fbcf926ec28882fa7c603bcb9bf5e21f6e083bf34d0&')
+        // .setImage('https://cdn.discordapp.com/attachments/1220085546190110900/1362137355934236822/Ritvik_DBFL_2025.gif?ex=6809de84&is=68088d04&hm=fae9745b915372fc323a535089020cf0f705f1ea5f370724d123355c1d781a84&')
         .setFooter({
             text: 'Make sure to check out other player statistics!!!'
         })
         .addFields([
             {name: 'Record', value: `*${wins}-${losses}*`},
-            {name: 'Position', value: 'QB/WR'},
+            {name: 'Position', value: 'WR'},
             {name: 'Touchdowns', value: `${parseInt(pass_tds) + parseInt(rec_tds)} (${touchdowns}) TDS | QB Rank: ***${qb_rank}*** | WR Rank: ***${wr_rank}***`},
             {name: 'YARDS (OFF)', value: `${off_yds} (${yards}) YDS`},
             {name: 'INTS (OFF)', value: `${ints_qb} (${off_ints}) INTS`},

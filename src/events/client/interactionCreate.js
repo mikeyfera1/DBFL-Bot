@@ -34,7 +34,7 @@ module.exports = {
             }
         }
 
-        else if (interaction.isSelectMenu()){
+        else if (interaction.isStringSelectMenu()){
             const { selectMenus } = client;
             const { customId } = interaction;
             const menu = selectMenus.get(customId);

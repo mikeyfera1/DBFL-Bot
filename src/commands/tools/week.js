@@ -28,7 +28,7 @@ module.exports = {
                 channel.send('@everyone\n\n**🎮 REMINDER 🎮**\n\nDBFL plays this **Saturday** from __10:00am-12:30pm__\n\nLike this message if you\'re available');
             });
 
-            isScheduled = true;
+            isScheduled = true; 
             console.log('Weekly game reminders scheduled!!')
         }
     },

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
+const getPlayerAchievements = require('../../utils/achievements');
 const { google } = require('googleapis');
 const sheets = google.sheets('v4');
 
@@ -36,19 +37,21 @@ module.exports = {
             ints_qb,
             ints_def,
             rating,
-            filler1,
+            td_a,
             touchdowns,
             yards,
             off_ints,
             def_ints,
-            filler2,
+            yd_a,
             qb_rank,
             wr_rank,
             def_rank,
-            filler3,
+            int_a,
             wins,
             losses
         ] = values;
+        
+        getPlayerAchievements(client,'1xREw4GOWNdrfecTE13t4uWIstXvR5WdhGiwK1PjLWXE', 'Mikey', 2, touchdowns, yards, def_ints, td_a, yd_a, int_a);
 
         const embed = new EmbedBuilder()
         .setTitle(`Mikey Fera`)
@@ -61,7 +64,7 @@ module.exports = {
         .addFields([
             {name: 'Record', value: `*${wins}-${losses}*`},
             {name: 'Position', value: 'QB'},
-            {name: 'Touchdowns', value: `${parseInt(pass_tds) + parseInt(rec_tds)} (${touchdowns}) TDS | Rank: ***${qb_rank}***`},
+            {name: 'Touchdowns', value: `${parseInt(pass_tds) + parseInt(rec_tds)} (${touchdowns}) TDS | QB Rank: ***${qb_rank}*** | WR Rank: ***${wr_rank}***`},
             {name: 'YARDS (OFF)', value: `${off_yds} (${yards}) YDS`},
             {name: 'INTS (OFF)', value: `${ints_qb} (${off_ints}) INTS`},
             {name: 'INTS (DEF)', value: `${ints_def} (${def_ints}) INTS | Rank: ***${def_rank}***`},
