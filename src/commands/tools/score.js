@@ -96,6 +96,7 @@ module.exports = {
                     {name: 'Team One', value: `*${score[0]}*`},
                     {name: 'Team Two', value: `*${score[1]}*`},
                 ]);
+                
 
             await interaction.reply({
                 embeds: [embed],
